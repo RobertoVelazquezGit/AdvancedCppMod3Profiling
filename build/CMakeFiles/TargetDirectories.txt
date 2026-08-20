@@ -1,0 +1,3 @@
+/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling/build/CMakeFiles/Mod3ProfilingPerformance.dir
+/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling/build/CMakeFiles/edit_cache.dir
+/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling/build/CMakeFiles/rebuild_cache.dir
