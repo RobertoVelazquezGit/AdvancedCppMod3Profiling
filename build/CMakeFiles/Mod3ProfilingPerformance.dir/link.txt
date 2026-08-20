@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/Mod3ProfilingPerformance.dir/src/main.cpp.o -o Mod3ProfilingPerformance 
+/usr/bin/c++ CMakeFiles/Mod3ProfilingPerformance.dir/src/main.cpp.o -o Mod3ProfilingPerformance 
