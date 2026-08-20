@@ -129,29 +129,29 @@ Mod3ProfilingPerformance/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/build
 .PHONY : Mod3ProfilingPerformance/fast
 
-src/StatisticalBenchmarking.o: src/StatisticalBenchmarking.cpp.o
-.PHONY : src/StatisticalBenchmarking.o
+src/AlgorithmPerformanceProfiling.o: src/AlgorithmPerformanceProfiling.cpp.o
+.PHONY : src/AlgorithmPerformanceProfiling.o
 
 # target to build an object file
-src/StatisticalBenchmarking.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/StatisticalBenchmarking.cpp.o
-.PHONY : src/StatisticalBenchmarking.cpp.o
+src/AlgorithmPerformanceProfiling.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/AlgorithmPerformanceProfiling.cpp.o
+.PHONY : src/AlgorithmPerformanceProfiling.cpp.o
 
-src/StatisticalBenchmarking.i: src/StatisticalBenchmarking.cpp.i
-.PHONY : src/StatisticalBenchmarking.i
+src/AlgorithmPerformanceProfiling.i: src/AlgorithmPerformanceProfiling.cpp.i
+.PHONY : src/AlgorithmPerformanceProfiling.i
 
 # target to preprocess a source file
-src/StatisticalBenchmarking.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/StatisticalBenchmarking.cpp.i
-.PHONY : src/StatisticalBenchmarking.cpp.i
+src/AlgorithmPerformanceProfiling.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/AlgorithmPerformanceProfiling.cpp.i
+.PHONY : src/AlgorithmPerformanceProfiling.cpp.i
 
-src/StatisticalBenchmarking.s: src/StatisticalBenchmarking.cpp.s
-.PHONY : src/StatisticalBenchmarking.s
+src/AlgorithmPerformanceProfiling.s: src/AlgorithmPerformanceProfiling.cpp.s
+.PHONY : src/AlgorithmPerformanceProfiling.s
 
 # target to generate assembly for a file
-src/StatisticalBenchmarking.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/StatisticalBenchmarking.cpp.s
-.PHONY : src/StatisticalBenchmarking.cpp.s
+src/AlgorithmPerformanceProfiling.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/AlgorithmPerformanceProfiling.cpp.s
+.PHONY : src/AlgorithmPerformanceProfiling.cpp.s
 
 # Help Target
 help:
@@ -162,9 +162,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Mod3ProfilingPerformance"
-	@echo "... src/StatisticalBenchmarking.o"
-	@echo "... src/StatisticalBenchmarking.i"
-	@echo "... src/StatisticalBenchmarking.s"
+	@echo "... src/AlgorithmPerformanceProfiling.o"
+	@echo "... src/AlgorithmPerformanceProfiling.i"
+	@echo "... src/AlgorithmPerformanceProfiling.s"
 .PHONY : help
 
 

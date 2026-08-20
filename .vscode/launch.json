@@ -27,7 +27,7 @@
             //"miDebuggerPath": "/usr/bin/gdb"
         },
         {
-            "name": "C++ Debug source2",
+            "name": "C++ Debug AlgorithmPerformanceProfiling",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/Mod3ProfilingPerformance", 

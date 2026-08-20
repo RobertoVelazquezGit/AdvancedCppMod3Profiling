@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Mod3ProfilingPerformance.dir/src/StatisticalBenchmarking.cpp.o"
-  "CMakeFiles/Mod3ProfilingPerformance.dir/src/StatisticalBenchmarking.cpp.o.d"
+  "CMakeFiles/Mod3ProfilingPerformance.dir/src/AlgorithmPerformanceProfiling.cpp.o"
+  "CMakeFiles/Mod3ProfilingPerformance.dir/src/AlgorithmPerformanceProfiling.cpp.o.d"
   "Mod3ProfilingPerformance"
   "Mod3ProfilingPerformance.pdb"
 )
