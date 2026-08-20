@@ -90,7 +90,7 @@ public:
 };
 
 int main(int argc, char* argv[]) {
-  std::cout << "Hello world" << std::endl;
+  std::cout << "Hello world statistical benchmarking" << std::endl;
 
   for (int index = 1; index < argc; ++index) {
     std::cout << "Argumento " << index << ": " << argv[index] << std::endl;

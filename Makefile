@@ -1,3 +1,5 @@
+SOURCE ?= 1
+
 .PHONY: all
 all: format test build
 
@@ -9,14 +11,14 @@ format:
 build:
 	mkdir -p build
 	cd build && \
-	cmake .. && \
+	cmake -DSOURCE=$(SOURCE) .. && \
 	make
 
 .PHONY: debug
 debug:
 	mkdir -p build
 	cd build && \
-	cmake -DCMAKE_BUILD_TYPE=debug .. && \
+	cmake -DCMAKE_BUILD_TYPE=debug -DSOURCE=$(SOURCE) .. && \
 	make
 
 .PHONY: clean

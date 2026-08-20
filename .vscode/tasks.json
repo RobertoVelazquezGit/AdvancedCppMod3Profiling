@@ -2,11 +2,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            //"label": "g++ build active file",
-            "label": "my_make_debug",
+            "label": "my_make_debug_source1",
             "type": "shell",
-            //"command": "cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make"
-            "command": "make debug"
+            "command": "make debug SOURCE=1"
+        },
+        {
+            "label": "my_make_debug_source2",
+            "type": "shell",
+            "command": "make debug SOURCE=2"
+        },
+        {
+            "label": "my_make_debug_source3",
+            "type": "shell",
+            "command": "make debug SOURCE=3"
         }
     ]
 }

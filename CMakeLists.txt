@@ -5,6 +5,16 @@ project(Mod3ProfilingPerformance)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(Mod3ProfilingPerformance
-    src/StatisticalBenchmarking.cpp
-)
+set(SOURCE 1 CACHE STRING "Source file to build")
+
+if(SOURCE EQUAL 1)
+    set(SOURCE_FILE src/StatisticalBenchmarking.cpp)
+elseif(SOURCE EQUAL 2)
+    set(SOURCE_FILE src/source2.cpp)
+elseif(SOURCE EQUAL 3)
+    set(SOURCE_FILE src/source3.cpp)
+else()
+    message(FATAL_ERROR "Invalid SOURCE: ${SOURCE}")
+endif()
+
+add_executable(Mod3ProfilingPerformance ${SOURCE_FILE})
