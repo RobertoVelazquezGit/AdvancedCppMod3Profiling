@@ -18,10 +18,11 @@ Test the framework with simple operations to validate accuracy
 #include <iomanip>
 #include <cmath>
 #include <functional>
+#include <string>
 
 class PrecisionTimer {
 private:
-    std::chrono::high_resolution_clock::time_point startTime;
+    // TODO: Add timing infrastructure
     
 public:
     PrecisionTimer() {
