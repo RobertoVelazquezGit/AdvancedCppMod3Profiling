@@ -11,14 +11,14 @@ format:
 build:
 	mkdir -p build
 	cd build && \
-	cmake -DSOURCE=$(SOURCE) .. && \
+	cmake -DSOURCE=$(SOURCE) -DCMAKE_CXX_FLAGS="-pg -O0" .. && \
 	make
 
 .PHONY: debug
 debug:
 	mkdir -p build
 	cd build && \
-	cmake -DCMAKE_BUILD_TYPE=debug -DSOURCE=$(SOURCE) .. && \
+	cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-O0" -DSOURCE=$(SOURCE) .. && \
 	make
 
 .PHONY: clean

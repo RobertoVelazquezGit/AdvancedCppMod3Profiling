@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/Mod3ProfilingPerformance.dir/src/StatisticalBenchmarking.cpp.o -o Mod3ProfilingPerformance 
+/usr/bin/c++ -pg -O0 -g CMakeFiles/Mod3ProfilingPerformance.dir/src/StatisticalBenchmarking.cpp.o -o Mod3ProfilingPerformance 

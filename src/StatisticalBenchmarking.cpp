@@ -117,7 +117,12 @@ int main() {
     StatisticalBenchmark benchmark("Sum 1000 integers");
     benchmark.runBenchmark([&values, &result]() {
         result = std::accumulate(values.begin(), values.end(), 0LL);
-    }, 100);
+/*
+        for (int iteration = 0; iteration < 10000; ++iteration) {
+            result = std::accumulate(values.begin(), values.end(), 0LL);
+        }
+*/
+    }, 100);    
 
     std::cout << "Benchmark: Sum 1000 integers" << std::endl;
     std::cout << std::fixed << std::setprecision(3)
@@ -127,3 +132,9 @@ int main() {
                         << "Result: " << result << std::endl;                        
   return 0;
 }
+
+/*
+To make profile:
+gprof ./build/Mod3ProfilingPerformance gmon.out > StatisticalBenchmarking.txt
+*/
+
