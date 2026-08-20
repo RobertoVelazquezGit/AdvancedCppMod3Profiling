@@ -22,25 +22,35 @@ Test the framework with simple operations to validate accuracy
 
 class PrecisionTimer {
 private:
-    // TODO: Add timing infrastructure
-    
+    std::chrono::high_resolution_clock::time_point startTime;
+
 public:
     PrecisionTimer() {
-        // TODO: Initialize timing system
+        // Initialize timing system
+        startTime = std::chrono::high_resolution_clock::now();
     }
-    
+
     void startTiming() {
-        // TODO: Record start time using high_resolution_clock
+        // Record start time
+        startTime = std::chrono::high_resolution_clock::now();
     }
-    
+
     double getElapsedMicroseconds() {
-        // TODO: Calculate elapsed time in microseconds
-        return 0.0;
+        // Calculate elapsed time in microseconds
+        auto endTime = std::chrono::high_resolution_clock::now();
+
+        return std::chrono::duration<double, std::micro>(
+            endTime - startTime
+        ).count();
     }
-    
+
     double getElapsedMilliseconds() {
-        // TODO: Calculate elapsed time in milliseconds
-        return 0.0;
+        // Calculate elapsed time in milliseconds
+        auto endTime = std::chrono::high_resolution_clock::now();
+
+        return std::chrono::duration<double, std::milli>(
+            endTime - startTime
+        ).count();
     }
 };
 
@@ -56,7 +66,7 @@ public:
     void runBenchmark(Func function, int trials = 10) {
         measurements.clear();
         
-        // Warm-up run
+        // Warm-up run, eliminate cold cache effects    
         function();
         
         for (int i = 0; i < trials; ++i) {
@@ -79,22 +89,41 @@ public:
     }
     
     double getAverageTime() const {
-        // TODO: Return average execution time
-        return 0.0;
+        if (measurements.empty()) return 0.0;
+
+        return std::accumulate(measurements.begin(), measurements.end(), 0.0) /
+               measurements.size();
     }
     
     double getStandardDeviation() const {
-        // TODO: Calculate standard deviation of measurements
-        return 0.0;
+        if (measurements.empty()) return 0.0;
+
+        const double average = getAverageTime();
+        double variance = 0.0;
+        for (double measurement : measurements) {
+            const double difference = measurement - average;
+            variance += difference * difference;
+        }
+
+        return std::sqrt(variance / measurements.size());
     }
 };
 
-int main(int argc, char* argv[]) {
-  std::cout << "Hello world statistical benchmarking" << std::endl;
+int main() {
+    std::vector<int> values(1000);
+    std::iota(values.begin(), values.end(), 1);  // fill with values 1 to 1000  
 
-  for (int index = 1; index < argc; ++index) {
-    std::cout << "Argumento " << index << ": " << argv[index] << std::endl;
-  }
+    volatile long long result = 0;
+    StatisticalBenchmark benchmark("Sum 1000 integers");
+    benchmark.runBenchmark([&values, &result]() {
+        result = std::accumulate(values.begin(), values.end(), 0LL);
+    }, 100);
 
+    std::cout << "Benchmark: Sum 1000 integers" << std::endl;
+    std::cout << std::fixed << std::setprecision(3)
+                        << "Average: " << benchmark.getAverageTime() << " us" << std::endl
+                        << "Standard deviation: " << benchmark.getStandardDeviation()
+                        << " us" << std::endl
+                        << "Result: " << result << std::endl;                        
   return 0;
 }
