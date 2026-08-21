@@ -15,6 +15,7 @@ Measure how performance scales with data size to validate complexity analysis
 #include <random>
 #include <unordered_map>
 #include <iostream>
+#include <numeric>
 
 class AlgorithmProfiler {
 private:
@@ -22,8 +23,19 @@ private:
     
 public:
     void generateTestData(size_t size) {
-        // TODO: Generate realistic test dataset
-        // Use random data with controlled distribution
+        testData.resize(size);
+
+        std::random_device rd;
+        std::mt19937 generator(rd());
+        std::uniform_int_distribution<int> distribution(1, size * 10);
+
+        for (int& value : testData) {
+            value = distribution(generator);
+        }
+    }
+
+    const std::vector<int>& getTestData() const {
+        return testData;
     }
     
     // Inefficient O(n²) sorting algorithm for comparison
@@ -40,12 +52,17 @@ public:
     
     // Efficient O(n log n) sorting using STL
     void optimizedSort(std::vector<int>& data) {
-        // TODO: Use std::sort for comparison
+        std::sort(data.begin(), data.end());
     }
     
     // Linear search O(n)
     int linearSearch(const std::vector<int>& data, int target) {
-        // TODO: Implement simple linear search
+        for (size_t index = 0; index < data.size(); ++index) {
+            if (data[index] == target) {
+                return static_cast<int>(index);
+            }
+        }
+
         return -1;
     }
     
@@ -63,33 +80,36 @@ public:
     
     // Hash-based lookup O(1) average case
     std::unordered_map<int, int> buildHashIndex(const std::vector<int>& data) {
-        // TODO: Build hash map for O(1) lookups
-        return {};
+        std::unordered_map<int, int> hashMap;
+        hashMap.reserve(data.size());
+
+        for (size_t index = 0; index < data.size(); ++index) {
+            hashMap[data[index]] = static_cast<int>(index);
+        }
+
+        return hashMap;
     }
     
     int hashLookup(const std::unordered_map<int, int>& hashMap, int target) {
-        // TODO: Perform hash-based lookup
-        return -1;
+        auto iterator = hashMap.find(target);
+        return iterator != hashMap.end() ? iterator->second : -1;
     }
     
     // Memory-intensive operation for cache analysis
     void processDataSequential(const std::vector<int>& data) {
-        // TODO: Sequential memory access pattern (cache-friendly)
-        volatile long sum = 0;
-        for (size_t i = 0; i < data.size(); ++i) {
-            sum += data[i];
+        volatile long long sum = 0;
+        for (int value : data) {
+            sum += value;
         }
     }
     
     void processDataRandom(const std::vector<int>& data) {
-        // TODO: Random memory access pattern (cache-unfriendly)
         std::vector<size_t> indices(data.size());
         std::iota(indices.begin(), indices.end(), 0);
-       std::default_random_engine rng(std::random_device{}()); 
-        std::shuffle(indices.begin(), indices.end(), rng);
+        std::mt19937 generator(std::random_device{}());
+        std::shuffle(indices.begin(), indices.end(), generator);
 
-        
-        volatile long sum = 0;
+        volatile long long sum = 0;
         for (size_t idx : indices) {
             sum += data[idx];
         }
@@ -97,7 +117,41 @@ public:
 };
 
 int main() {
-  std::cout << "Hello world source2" << std::endl;
+    AlgorithmProfiler profiler;
+    const std::vector<size_t> dataSizes = {1000, 10000, 100000};
 
-  return 0;
+    std::cout << "Algorithm profiling benchmark" << std::endl;
+
+    for (size_t size : dataSizes) {
+        profiler.generateTestData(size);
+        const auto& data = profiler.getTestData();
+        const int target = data.back();
+
+        std::cout << "\nData size: " << size << std::endl;
+
+        if (size <= 10000) {
+            std::vector<int> bubbleData = data;
+            profiler.bubbleSort(bubbleData);
+        }
+
+        std::vector<int> optimizedData = data;
+        profiler.optimizedSort(optimizedData);
+
+        for (int iteration = 0; iteration < 1000; ++iteration) {
+            profiler.linearSearch(data, target);
+            profiler.binarySearch(optimizedData, target);
+        }
+
+        const auto hashMap = profiler.buildHashIndex(data);
+        for (int iteration = 0; iteration < 1000; ++iteration) {
+            profiler.hashLookup(hashMap, target);
+        }
+
+        for (int iteration = 0; iteration < 100; ++iteration) {
+            profiler.processDataSequential(data);
+            profiler.processDataRandom(data);
+        }
+    }
+
+    return 0;
 }

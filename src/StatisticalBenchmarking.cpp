@@ -133,8 +133,4 @@ int main() {
   return 0;
 }
 
-/*
-To make profile:
-gprof ./build/Mod3ProfilingPerformance gmon.out > StatisticalBenchmarking.txt
-*/
 

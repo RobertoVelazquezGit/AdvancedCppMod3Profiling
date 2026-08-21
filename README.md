@@ -59,3 +59,26 @@ This allows each source file to be built and debugged independently, even though
 ```text
 build/Mod3ProfilingPerformance
 ```
+
+## Profiling with gprof
+
+Run these commands from the project root. The `build` target already enables the `-pg` compiler option required by `gprof`:
+
+```bash
+# Remove profiling output from a previous run
+rm -f gmon.out StatisticalBenchmarking.txt
+
+# Build the source to profile (SOURCE=1 is StatisticalBenchmarking.cpp)
+make build SOURCE=1
+
+# Run the instrumented executable and generate gmon.out
+./build/Mod3ProfilingPerformance
+
+# Generate the profiling report
+gprof ./build/Mod3ProfilingPerformance gmon.out > StatisticalBenchmarking.txt
+
+# Read the report
+less StatisticalBenchmarking.txt
+```
+
+To profile another source file, replace `SOURCE=1` with `SOURCE=2` or `SOURCE=3` in the build command. Execute the program before running `gprof`, otherwise `gmon.out` will not contain a new profile.
