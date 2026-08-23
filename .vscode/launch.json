@@ -52,7 +52,7 @@
             //"miDebuggerPath": "/usr/bin/gdb"
         },
         {
-            "name": "C++ Debug source3",
+            "name": "C++ Debug MemCacheAnalysis",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/Mod3ProfilingPerformance", 
