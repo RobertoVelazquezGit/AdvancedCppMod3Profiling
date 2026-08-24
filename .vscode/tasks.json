@@ -25,6 +25,11 @@
                 "label": "my_make_debug_source5",
                 "type": "shell",
                 "command": "make debug SOURCE=5"
-            }   
+            },
+            {
+                "label": "my_make_debug_source6",
+                "type": "shell",
+                "command": "make debug SOURCE=6"
+            }
     ]
 }

@@ -1,1 +1,0 @@
-/usr/bin/c++ -g -O0 CMakeFiles/Mod3ProfilingPerformance.dir/src/ProfilingTestApp.cpp.o -o Mod3ProfilingPerformance 

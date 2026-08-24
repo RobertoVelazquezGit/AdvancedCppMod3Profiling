@@ -1,3 +1,0 @@
-/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling/build_callgrind/CMakeFiles/Mod3ProfilingPerformance.dir
-/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling/build_callgrind/CMakeFiles/edit_cache.dir
-/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling/build_callgrind/CMakeFiles/rebuild_cache.dir
