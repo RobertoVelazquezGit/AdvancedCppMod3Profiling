@@ -22,7 +22,7 @@ CMAKE_AR:FILEPATH=/usr/bin/ar
 
 //Choose the type of build, options are: None Debug Release RelWithDebInfo
 // MinSizeRel ...
-CMAKE_BUILD_TYPE:STRING=Debug
+CMAKE_BUILD_TYPE:STRING=
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
@@ -225,7 +225,7 @@ Mod3ProfilingPerformance_IS_TOP_LEVEL:STATIC=ON
 Mod3ProfilingPerformance_SOURCE_DIR:STATIC=/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling
 
 //Source file to build
-SOURCE:STRING=4
+SOURCE:STRING=5
 
 
 ########################

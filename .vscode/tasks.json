@@ -16,11 +16,15 @@
             "type": "shell",
             "command": "make debug SOURCE=3"
         },
-        {
-            "label": "my_make_debug_source4",
-            "type": "shell",
-            "command": "make debug SOURCE=4"
-        }
-
+            {
+                "label": "my_make_debug_source4",
+                "type": "shell",
+                "command": "make debug SOURCE=4"
+            },
+            {
+                "label": "my_make_debug_source5",
+                "type": "shell",
+                "command": "make debug SOURCE=5"
+            }   
     ]
 }

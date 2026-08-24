@@ -129,29 +129,29 @@ Mod3ProfilingPerformance/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/build
 .PHONY : Mod3ProfilingPerformance/fast
 
-src/IOPerformanceBottleneck.o: src/IOPerformanceBottleneck.cpp.o
-.PHONY : src/IOPerformanceBottleneck.o
+src/ProfilingTestApp.o: src/ProfilingTestApp.cpp.o
+.PHONY : src/ProfilingTestApp.o
 
 # target to build an object file
-src/IOPerformanceBottleneck.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/IOPerformanceBottleneck.cpp.o
-.PHONY : src/IOPerformanceBottleneck.cpp.o
+src/ProfilingTestApp.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/ProfilingTestApp.cpp.o
+.PHONY : src/ProfilingTestApp.cpp.o
 
-src/IOPerformanceBottleneck.i: src/IOPerformanceBottleneck.cpp.i
-.PHONY : src/IOPerformanceBottleneck.i
+src/ProfilingTestApp.i: src/ProfilingTestApp.cpp.i
+.PHONY : src/ProfilingTestApp.i
 
 # target to preprocess a source file
-src/IOPerformanceBottleneck.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/IOPerformanceBottleneck.cpp.i
-.PHONY : src/IOPerformanceBottleneck.cpp.i
+src/ProfilingTestApp.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/ProfilingTestApp.cpp.i
+.PHONY : src/ProfilingTestApp.cpp.i
 
-src/IOPerformanceBottleneck.s: src/IOPerformanceBottleneck.cpp.s
-.PHONY : src/IOPerformanceBottleneck.s
+src/ProfilingTestApp.s: src/ProfilingTestApp.cpp.s
+.PHONY : src/ProfilingTestApp.s
 
 # target to generate assembly for a file
-src/IOPerformanceBottleneck.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/IOPerformanceBottleneck.cpp.s
-.PHONY : src/IOPerformanceBottleneck.cpp.s
+src/ProfilingTestApp.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Mod3ProfilingPerformance.dir/build.make CMakeFiles/Mod3ProfilingPerformance.dir/src/ProfilingTestApp.cpp.s
+.PHONY : src/ProfilingTestApp.cpp.s
 
 # Help Target
 help:
@@ -162,9 +162,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Mod3ProfilingPerformance"
-	@echo "... src/IOPerformanceBottleneck.o"
-	@echo "... src/IOPerformanceBottleneck.i"
-	@echo "... src/IOPerformanceBottleneck.s"
+	@echo "... src/ProfilingTestApp.o"
+	@echo "... src/ProfilingTestApp.i"
+	@echo "... src/ProfilingTestApp.s"
 .PHONY : help
 
 
