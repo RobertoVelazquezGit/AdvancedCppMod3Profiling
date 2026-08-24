@@ -39,7 +39,7 @@ CMAKE_CXX_COMPILER_AR:FILEPATH=/usr/bin/gcc-ar-13
 CMAKE_CXX_COMPILER_RANLIB:FILEPATH=/usr/bin/gcc-ranlib-13
 
 //Flags used by the CXX compiler during all build types.
-CMAKE_CXX_FLAGS:STRING=-pg -O0
+CMAKE_CXX_FLAGS:STRING=-O0
 
 //Flags used by the CXX compiler during DEBUG builds.
 CMAKE_CXX_FLAGS_DEBUG:STRING=-g
@@ -225,7 +225,7 @@ Mod3ProfilingPerformance_IS_TOP_LEVEL:STATIC=ON
 Mod3ProfilingPerformance_SOURCE_DIR:STATIC=/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling
 
 //Source file to build
-SOURCE:STRING=3
+SOURCE:STRING=4
 
 
 ########################

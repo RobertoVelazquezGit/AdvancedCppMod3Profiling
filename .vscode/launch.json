@@ -75,6 +75,31 @@
             ],
             "preLaunchTask": "my_make_debug_source3",
             //"miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "C++ Debug IOPerformanceBottleneck",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Mod3ProfilingPerformance", 
+            "args": [
+                "uno_arg1",
+                "dos_arg2",
+                "tres_arg3"
+            ], // Sustituye por tus argumentos
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Habilitar impresión de formato GDB para valores",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "my_make_debug_source4",
+            //"miDebuggerPath": "/usr/bin/gdb"
         }
     ]
 }
