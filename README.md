@@ -82,3 +82,36 @@ less StatisticalBenchmarking.txt
 ```
 
 To profile another source file, replace `SOURCE=1` with `SOURCE=2` or `SOURCE=3` in the build command. Execute the program before running `gprof`, otherwise `gmon.out` will not contain a new profile.
+
+## Profiling with Callgrind
+
+Build the selected source with debug symbols and without gprof instrumentation:
+
+```bash
+make callgrind SOURCE=5
+```
+
+Run the executable with Callgrind and enable cache simulation:
+
+```bash
+valgrind --tool=callgrind --cache-sim=yes \
+    ./build_callgrind/Mod3ProfilingPerformance
+```
+
+Callgrind creates a file named `callgrind.out.<PID>`. Generate a readable report
+by replacing `<PID>` with the process ID shown by Valgrind:
+
+```bash
+callgrind_annotate --inclusive=yes --auto=yes \
+    callgrind.out.<PID> > callgrindAnalysis.txt
+```
+
+Open the generated report:
+
+```bash
+less callgrindAnalysis.txt
+```
+
+The report includes executed instructions, data reads and writes, and simulated
+cache misses. Use `make clean` to remove the build directories before creating
+a fresh build.

@@ -30,4 +30,4 @@ debug:
 
 .PHONY: clean
 clean:
-	rm -rf build build_callgrind
+	rm -rf build
