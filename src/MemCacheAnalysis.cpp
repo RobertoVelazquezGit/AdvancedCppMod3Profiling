@@ -203,6 +203,61 @@ for (int row = 0; row < rows; ++row) {
 
 int main() {
     std::cout << "Memory access pattern and cache behavior analysis" << std::endl;
+
+    volatile long long matrixResult = 0;
+    const std::vector<int> matrixSizes = {128, 256, 512};
+
+    for (int size : matrixSizes) {
+        const auto matrix = CachePerformanceAnalyzer::createMatrix(size, size);
+        const long rowMajorResult =
+            CachePerformanceAnalyzer::matrixSumRowMajor(matrix);
+        const long columnMajorResult =
+            CachePerformanceAnalyzer::matrixSumColumnMajor(matrix);
+
+        if (rowMajorResult != columnMajorResult) {
+            std::cerr << "Matrix sum validation failed for size " << size
+                      << std::endl;
+            return 1;
+        }
+
+        for (int iteration = 0; iteration < 100; ++iteration) {
+            matrixResult += CachePerformanceAnalyzer::matrixSumRowMajor(matrix);
+            matrixResult += CachePerformanceAnalyzer::matrixSumColumnMajor(matrix);
+        }
+
+        std::cout << "Matrix " << size << "x" << size
+                  << " validated: sum = " << rowMajorResult << std::endl;
+    }
+
+    volatile double energyResult = 0.0;
+    const std::vector<size_t> particleCounts = {10000, 50000, 100000};
+
+    for (size_t count : particleCounts) {
+        CachePerformanceAnalyzer::ParticleSystemAoS aos;
+        CachePerformanceAnalyzer::ParticleSystemSoA soa;
+        CachePerformanceAnalyzer::initializeParticles(aos, count);
+        CachePerformanceAnalyzer::initializeParticles(soa, count);
+
+        const double aosEnergy = aos.calculateKineticEnergy();
+        const double soaEnergy = soa.calculateKineticEnergy();
+
+        if (aosEnergy != soaEnergy) {
+            std::cerr << "Particle energy validation failed for count " << count
+                      << std::endl;
+            return 1;
+        }
+
+        for (int iteration = 0; iteration < 100; ++iteration) {
+            energyResult += aos.calculateKineticEnergy();
+            energyResult += soa.calculateKineticEnergy();
+        }
+
+        std::cout << "Particles " << count
+                  << " validated: kinetic energy = " << aosEnergy << std::endl;
+    }
+
+    // Keep benchmark results observable so profiling work is not optimized away.
+    std::cout << "Benchmark checksum: " << matrixResult + energyResult << std::endl;
     return 0;
 }
 
