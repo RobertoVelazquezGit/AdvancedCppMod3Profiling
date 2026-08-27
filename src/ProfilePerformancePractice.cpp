@@ -74,8 +74,9 @@ public:
             auto start = chrono::high_resolution_clock::now();
             function();
             auto end = chrono::high_resolution_clock::now();
-            
+                   
             auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+            // count() returns the integer number of microseconds
             measurements.push_back(duration.count() / 1000.0);  // Convert to ms
         }
         
@@ -96,7 +97,7 @@ public:
         }
         
         double avg = getAverageTime();
-        double minTime = *min_element(measurements.begin(), measurements.end());
+        double minTime = *min_element(measurements.begin(), measurements.end());  // from <algorithm>   
         double maxTime = *max_element(measurements.begin(), measurements.end());
         
         // Calculate standard deviation
@@ -113,9 +114,16 @@ public:
         cout << "StdDev:  " << stddev << " ms" << endl;
         cout << "Trials:  " << measurements.size() << endl;
         
-        // Calculate confidence interval (rough estimate)
-        double margin = 1.96 * stddev / sqrt(measurements.size());  // 95% confidence
-        cout << "95% CI:  [" << (avg - margin) << ", " << (avg + margin) << "] ms" << endl;
+        // Calculate the Standard Error (SE) of the estimated mean
+        double standardError = stddev / sqrt(measurements.size());
+
+        // Calculate the margin of error for an approximate 95% confidence interval
+        double margin = 1.96 * standardError;
+
+        // The 95% confidence interval estimates the uncertainty of the mean
+        cout << "Standard Error: " << standardError << " ms" << endl;
+        cout << "95% CI: [" << (avg - margin) << ", "
+            << (avg + margin) << "] ms" << endl;
     }
 };
 
@@ -176,6 +184,8 @@ public:
         }
         return -1;
     }
+
+    // ToDo
     
     // Memory-intensive operations for profiling - multi-pass
     vector<double> computeStatistics() {
