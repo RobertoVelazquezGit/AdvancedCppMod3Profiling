@@ -184,8 +184,6 @@ public:
         }
         return -1;
     }
-
-    // ToDo
     
     // Memory-intensive operations for profiling - multi-pass
     vector<double> computeStatistics() {
@@ -237,7 +235,7 @@ public:
             
             if (value < minVal) minVal = value;
             if (value > maxVal) maxVal = value;
-        }
+        } 
         
         double mean = sum / data.size();
         double variance = (sumSquares / data.size()) - (mean * mean);
@@ -359,9 +357,14 @@ public:
         ifstream file(filename);
         
         // Read entire file into memory buffer first
-        string content((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
+        std::string content(
+            // Extra parentheses avoid the "Most Vexing Parse", ensuring this is interpreted as an object construction.
+            (std::istreambuf_iterator<char>(file)),  // Beginning: reads from file
+            std::istreambuf_iterator<char>()       // End: end-of-stream iterator
+        );        
         
         // Parse from memory buffer
+        // Here content is a string containing the entire file content, we can use a stringstream to parse integers 
         stringstream ss(content);
         int value;
         while (ss >> value) {
@@ -376,7 +379,7 @@ public:
         ifstream file(filename);
         string line;
         
-        while (getline(file, line)) {
+        while (getline(file, line)) { // Reads until '\n', but doesn't store '\n'
             if (!line.empty()) {
                 try {
                     int value = stoi(line);
@@ -406,7 +409,7 @@ void testSortingAlgorithms() {
         DataProcessor processor;
         
         // Test bubble sort
-        BenchmarkRunner bubbleBench("Bubble Sort (O(n²))");
+        BenchmarkRunner bubbleBench("Bubble Sort (O(n^2))");
         double bubbleTime = bubbleBench.runBenchmark([&]() {
             processor.loadData(size);
             processor.inefficientSort();
@@ -427,12 +430,16 @@ void testSortingAlgorithms() {
             cout << "🚀 STL Sort is " << fixed << setprecision(2) << speedup << "x faster" << endl;
             
             // Show complexity difference
+            // Estimates the theoretical complexity advantage of O(n log n) over O(n^2).
             double complexityRatio = static_cast<double>(size) / log2(size);
-            cout << "   Theoretical advantage: O(n²) vs O(n log n)" << endl;
+            cout << "   Theoretical advantage: O(n^2) vs O(n log n)" << endl;
             cout << "   Size/log(size) ratio: " << fixed << setprecision(0) << complexityRatio << endl;
         }
     }
 }
+
+// ToDo
+
 
 void testSearchAlgorithms() {
     cout << "\n=== Search Algorithm Performance Analysis ===" << endl;
