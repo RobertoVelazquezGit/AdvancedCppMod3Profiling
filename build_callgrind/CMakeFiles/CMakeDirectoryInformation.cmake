@@ -3,7 +3,7 @@
 
 # Relative path conversion top directories.
 set(CMAKE_RELATIVE_PATH_TOP_SOURCE "/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling")
-set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling/build")
+set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/roberto/Devcpp/AdvancedCpp/Mod3Profiling/build_callgrind")
 
 # Force unix paths in dependencies.
 set(CMAKE_FORCE_UNIX_PATHS 1)

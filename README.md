@@ -115,3 +115,68 @@ less callgrindAnalysis.txt
 The report includes executed instructions, data reads and writes, and simulated
 cache misses. Use `make clean` to remove the build directories before creating
 a fresh build.
+
+## Profiling with perf
+
+The `callgrind` build can also be used with `perf`. This target compiles the
+selected source with debug symbols and without compiler optimizations by using
+the `-g -O0` flags. For `ProfilePerformancePractice.cpp`, use `SOURCE=6`:
+
+```bash
+make callgrind SOURCE=6
+```
+
+The executable is generated in the `build_callgrind` directory:
+
+```text
+build_callgrind/Mod3ProfilingPerformance
+```
+
+Run the executable with `perf record`:
+
+```bash
+perf record ./build_callgrind/Mod3ProfilingPerformance
+```
+
+This executes the program and stores the collected profiling samples in a
+binary file named `perf.data` in the current directory.
+
+Convert the recorded data into a readable text report:
+
+```bash
+perf report --stdio > ProfilePerformancePractice_perf_report.txt
+```
+
+The `--stdio` option produces plain-text output instead of opening the
+interactive perf interface. Review the generated report with:
+
+```bash
+less ProfilePerformancePractice_perf_report.txt
+```
+
+The text report can then be given to Codex and summarized in the same style as
+the gprof and Callgrind analysis reports. For this profile, the resulting
+summary is:
+
+```text
+ProfilePerformancePractice_perf_summary.txt
+```
+
+Open the summary with:
+
+```bash
+less ProfilePerformancePractice_perf_summary.txt
+```
+
+The complete workflow is therefore:
+
+```bash
+make callgrind SOURCE=6
+perf record ./build_callgrind/Mod3ProfilingPerformance
+perf report --stdio > ProfilePerformancePractice_perf_report.txt
+less ProfilePerformancePractice_perf_report.txt
+less ProfilePerformancePractice_perf_summary.txt
+```
+
+Running `perf record` again normally replaces the existing `perf.data` file.
+Rename or archive it first if previous profiling data must be preserved.

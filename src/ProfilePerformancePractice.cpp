@@ -120,7 +120,8 @@ public:
         // Calculate the margin of error for an approximate 95% confidence interval
         double margin = 1.96 * standardError;
 
-        // The 95% confidence interval estimates the uncertainty of the mean
+        // The 95% confidence interval estimates the uncertainty of the mean,
+        // using 1.96 as the critical value for a 95% interval in the normal distribution.
         cout << "Standard Error: " << standardError << " ms" << endl;
         cout << "95% CI: [" << (avg - margin) << ", "
             << (avg + margin) << "] ms" << endl;
@@ -237,6 +238,7 @@ public:
             if (value > maxVal) maxVal = value;
         } 
         
+        // It can be algebraically proven that the variance can be calculated using this equivalent formula.
         double mean = sum / data.size();
         double variance = (sumSquares / data.size()) - (mean * mean);
         
@@ -427,7 +429,7 @@ void testSortingAlgorithms() {
         // Compare performance
         if (stlTime > 0) {
             double speedup = bubbleTime / stlTime;
-            cout << "🚀 STL Sort is " << fixed << setprecision(2) << speedup << "x faster" << endl;
+            cout << "- STL Sort is " << fixed << setprecision(2) << speedup << "x faster" << endl;
             
             // Show complexity difference
             // Estimates the theoretical complexity advantage of O(n log n) over O(n^2).
@@ -437,9 +439,6 @@ void testSortingAlgorithms() {
         }
     }
 }
-
-// ToDo
-
 
 void testSearchAlgorithms() {
     cout << "\n=== Search Algorithm Performance Analysis ===" << endl;
@@ -473,7 +472,7 @@ void testSearchAlgorithms() {
     
     if (binaryTime > 0) {
         double speedup = linearTime / binaryTime;
-        cout << "🚀 Binary Search is " << fixed << setprecision(2) << speedup << "x faster" << endl;
+        cout << "- Binary Search is " << fixed << setprecision(2) << speedup << "x faster" << endl;
         cout << "   Complexity advantage: O(n) vs O(log n)" << endl;
         cout << "   n/log₂(n) = " << fixed << setprecision(0) << LARGE_DATASET / log2(LARGE_DATASET) << endl;
     }
@@ -502,7 +501,7 @@ void testCachePerformance() {
     cacheGoodBench.printStatistics();
     
     // Verify both methods produce same result
-    cout << "Verification: sums are " << (badSum == goodSum ? "equal ✓" : "different ✗") << endl;
+    cout << "Verification: sums are " << (badSum == goodSum ? "equal ==" : "different !=") << endl;
     
     if (goodTime > 0) {
         double speedup = badTime / goodTime;
@@ -538,7 +537,7 @@ void testIOPerformance() {
     
     if (goodWriteTime > 0) {
         double writeSpeedup = badWriteTime / goodWriteTime;
-        cout << "🚀 Efficient I/O is " << fixed << setprecision(2) << writeSpeedup << "x faster for writing" << endl;
+        cout << "- Efficient I/O is " << fixed << setprecision(2) << writeSpeedup << "x faster for writing" << endl;
         cout << "   Reason: Fewer system calls, better buffering" << endl;
     }
     
@@ -559,11 +558,12 @@ void testIOPerformance() {
     
     if (goodReadTime > 0) {
         double readSpeedup = badReadTime / goodReadTime;
-        cout << "🚀 Efficient I/O is " << fixed << setprecision(2) << readSpeedup << "x faster for reading" << endl;
+        cout << "- Efficient I/O is " << fixed << setprecision(2) << readSpeedup << "x faster for reading" << endl;
         cout << "   Reason: Bulk read into memory, then parse" << endl;
     }
     
     // Cleanup test files
+    // From #include <cstdio>
     remove("test_bad.txt");
     remove("test_good.txt");
 }
@@ -602,7 +602,7 @@ void testStatisticsCalculation() {
             }
         }
         
-        cout << "Verification: results are " << (resultsMatch ? "equivalent ✓" : "different ✗") << endl;
+        cout << "Verification: results are " << (resultsMatch ? "equivalent ==" : "different !=") << endl;
         
         if (resultsMatch) {
             cout << "Statistics: mean=" << fixed << setprecision(2) << multiPassResult[0]
@@ -614,7 +614,7 @@ void testStatisticsCalculation() {
     
     if (singlePassTime > 0) {
         double speedup = multiPassTime / singlePassTime;
-        cout << "🚀 Single-pass optimization is " << fixed << setprecision(2) << speedup << "x faster" << endl;
+        cout << "- Single-pass optimization is " << fixed << setprecision(2) << speedup << "x faster" << endl;
         cout << "   Reason: Single iteration vs multiple iterations over data" << endl;
         cout << "   Cache benefits: Data stays in cache during single pass" << endl;
     }
@@ -625,30 +625,30 @@ void printProfilingGuide() {
     cout << "For more detailed profiling, use these professional tools:" << endl;
     cout << endl;
     
-    cout << "🔧 GNU gprof (Function-level profiling):" << endl;
+    cout << "- GNU gprof (Function-level profiling):" << endl;
     cout << "   1. Compile: g++ -pg -O0 -g program.cpp -o program" << endl;
     cout << "   2. Run: ./program" << endl;
     cout << "   3. Analyze: gprof ./program gmon.out > analysis.txt" << endl;
     cout << endl;
     
-    cout << "🔧 Valgrind Callgrind (Detailed call analysis):" << endl;
+    cout << "- Valgrind Callgrind (Detailed call analysis):" << endl;
     cout << "   1. Run: valgrind --tool=callgrind ./program" << endl;
     cout << "   2. Analyze: callgrind_annotate callgrind.out.[pid]" << endl;
     cout << "   3. Visualize: kcachegrind callgrind.out.[pid]" << endl;
     cout << endl;
     
-    cout << "🔧 Linux perf (System-wide profiling):" << endl;
+    cout << "- Linux perf (System-wide profiling):" << endl;
     cout << "   1. Run: perf record ./program" << endl;
     cout << "   2. Analyze: perf report" << endl;
     cout << "   3. Hotspots: perf top" << endl;
     cout << endl;
     
-    cout << "🔧 Valgrind Memcheck (Memory error detection):" << endl;
+    cout << "- Valgrind Memcheck (Memory error detection):" << endl;
     cout << "   1. Run: valgrind --leak-check=full ./program" << endl;
     cout << "   2. Check for memory leaks and access errors" << endl;
     cout << endl;
     
-    cout << "💡 Profiling Tips:" << endl;
+    cout << "- Profiling Tips:" << endl;
     cout << "   • Use -O0 for profiling to see actual source lines" << endl;
     cout << "   • Profile with realistic data sizes and workloads" << endl;
     cout << "   • Run multiple times to account for system noise" << endl;

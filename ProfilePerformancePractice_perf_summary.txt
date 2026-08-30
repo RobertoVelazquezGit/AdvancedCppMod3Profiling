@@ -1,0 +1,288 @@
+Profile Performance Practice perf Summary
+=========================================
+
+1. Objective
+------------
+This report summarizes the perf profile contained in
+ProfilePerformancePractice_perf_report.txt. The analyzed application compares
+efficient and inefficient implementations of sorting, searching, statistical
+calculations, matrix traversal, and file I/O.
+
+The purpose of this summary is to identify where the program spends CPU time,
+explain the main hotspots, and compare the native perf observations with the
+previous gprof and Callgrind results.
+
+2. Profiling Configuration
+--------------------------
+The report contains two views of the task-clock profiling data. Each view has
+approximately 10,000 samples:
+
+Capture    Event count (approx.)    Lost samples
+------------------------------------------------
+First          2,626,500,000             0
+Second         2,627,500,000             0
+
+The profiled event is:
+
+    task-clock:ppp
+
+Task-clock samples represent CPU time consumed by the process. The report is a
+statistical profile: the overhead percentage is the proportion of collected
+samples attributed to a symbol, not an exact wall-clock duration or a count of
+function calls.
+
+No samples were lost, so the collection completed without dropping recorded
+events. The two views report nearly identical event counts and similar hotspot
+percentages, which indicates that the dominant result is stable within this
+profile.
+
+3. Main Hotspots
+----------------
+The five most expensive symbols in both views are:
+
+Function                                  First view    Second view    Average
+----------------------------------------------------------------------------
+DataProcessor::inefficientSort()             41.10%        41.54%       41.32%
+vector<int>::operator[]()                    24.06%        23.59%       23.83%
+vector<int>::size()                          12.95%        12.56%       12.76%
+std::move<int&>()                             7.27%         7.52%        7.40%
+std::swap<int>()                              7.16%         7.42%        7.29%
+----------------------------------------------------------------------------
+Combined                                     92.54%        92.63%       92.59%
+
+Approximately 92.6 percent of sampled CPU time is concentrated in these five
+symbols. All of them are directly associated with the bubble-sort benchmark,
+so they describe one algorithmic bottleneck rather than five unrelated
+performance problems.
+
+4. Inefficient Sorting
+----------------------
+DataProcessor::inefficientSort() is the largest individual hotspot, consuming
+approximately 41.1 to 41.5 percent of the task-clock samples.
+
+The method implements bubble sort with two nested loops. It repeatedly:
+
+- Calls vector::size() to determine loop bounds.
+- Accesses adjacent elements through vector::operator[]().
+- Exchanges out-of-order values through std::swap().
+- Moves integer values as part of each swap.
+
+Bubble sort has O(n^2) complexity. The enormous number of comparisons and
+potential swaps causes the function and its child operations to dominate the
+profile.
+
+Adding the directly reported bubble-sort body, vector indexing, size queries,
+moves, and swaps gives approximately 92.6 percent of the CPU samples. This sum
+is useful as a description of the complete bubble-sort path because the perf
+report shown here attributes samples to the leaf symbol executing at the time
+of collection.
+
+The library functions are not the root cause. Replacing vector access or swap
+with hand-written equivalents would preserve the quadratic algorithm and would
+not address the dominant scaling problem.
+
+5. Efficient Sorting
+--------------------
+The std::sort path is visible through internal functions such as:
+
+    std::__unguarded_partition()       approximately 0.20%
+    iterator comparison                approximately 0.18% to 0.29%
+    iterator increment                 approximately 0.15%
+    unguarded linear insertion         approximately 0.05% to 0.06%
+
+These internal operations are individually small compared with bubble sort.
+std::sort uses an O(n log n) strategy and therefore avoids the quadratic growth
+that creates the primary hotspot.
+
+The profile confirms that the efficient sort consumes only a small fraction of
+the CPU time. However, this combined report does not provide a single inclusive
+percentage for the complete std::sort call tree. A call-graph recording or an
+isolated sorting benchmark would be needed for a precise end-to-end comparison.
+
+6. Cache Traversal
+------------------
+The two matrix traversal functions appear with similar exclusive percentages:
+
+Function                                  First view    Second view
+------------------------------------------------------------------
+CacheAnalyzer::cacheFriendlyMatrixSum()       0.13%         0.13%
+CacheAnalyzer::cacheUnfriendlyMatrixSum()     0.12%         0.12%
+
+These percentages do not prove that the column-major traversal is faster. Both
+functions account for only about twelve or thirteen samples per 10,000, so the
+difference is within normal sampling granularity.
+
+The row-major version should have better spatial locality for a
+vector<vector<int>> matrix because it processes contiguous values inside each
+row. The column-major version jumps between separately allocated rows.
+
+This task-clock report measures CPU time but does not contain hardware
+cache-miss events. Cache references and misses must be recorded explicitly
+with perf stat or perf record events, or evaluated using the existing
+Callgrind analysis.
+
+7. Statistics Calculation
+-------------------------
+The statistics functions are small hotspots:
+
+Function                                  First view    Second view
+------------------------------------------------------------------
+DataProcessor::optimizedStatistics()          0.06%         0.05%
+DataProcessor::computeStatistics()            0.04%         0.04%
+
+At this sampling scale, the reported difference is too small to conclude that
+one implementation is faster. A difference of 0.01 percentage points
+corresponds to approximately one sample in a 10,000-sample capture.
+
+The optimized function combines sum, sum of squares, minimum, and maximum into
+one traversal, while computeStatistics() performs several passes. The reduced
+memory traversal is algorithmically reasonable, but a dedicated benchmark
+with many more repetitions is required to measure it reliably.
+
+The optimized variance formula also has a numerical tradeoff. Computing
+E[x^2] - E[x]^2 can lose precision for data with a large mean and small
+variance. Welford's algorithm would retain a single-pass design with better
+numerical stability.
+
+8. Search Analysis
+------------------
+Neither the linear-search nor binary-search function is visible among the
+reported hotspots. Only a small number of searches are performed, and their
+cost is negligible compared with sorting.
+
+The absence of samples does not mean that the two implementations have equal
+performance. Linear search has O(n) complexity, whereas the lower_bound-based
+binary search has O(log n) complexity on sorted data. The operations need to
+be repeated many more times or profiled separately to measure this difference.
+
+9. I/O and System Activity
+--------------------------
+The report includes CPU work from the application, shared libraries, and the
+kernel. Visible I/O-related entries include:
+
+    __GI___libc_write                         0.54% to 0.56%
+    basic_filebuf::xsputn()                   approximately 0.04% to 0.07%
+    basic_filebuf::sync()                     approximately 0.06%
+    ostream formatting and insertion         small individual percentages
+    stream parsing functions                 small individual percentages
+
+The direct IOAnalyzer functions each account for approximately 0.01 percent or
+less. Much of their work is attributed to the library and kernel functions
+that actually perform formatting, buffering, parsing, and writing.
+
+Some kernel samples appear as unknown addresses. The largest unknown kernel
+entry is approximately 0.53 to 0.58 percent. Missing or restricted kernel
+symbols prevent perf from assigning those samples meaningful function names.
+
+Task-clock profiling measures on-CPU execution. It does not fully represent
+time spent sleeping while the storage device or operating system completes
+I/O. Wall-clock measurements remain necessary for comparing end-to-end file
+operations.
+
+10. Random Data and Supporting Costs
+------------------------------------
+Random-number generation is present but small:
+
+    Mersenne Twister operator()       approximately 0.14% to 0.19%
+    Mersenne Twister block generation approximately 0.13% to 0.17%
+    uniform_int_distribution          approximately 0.10% to 0.11%
+    DataProcessor::loadData()         approximately 0.03%
+
+These functions initialize benchmark data and are not part of the sorting,
+searching, or statistics algorithms being compared. They remain visible
+because perf records the complete program execution.
+
+11. Consistency Between the Two Views
+-------------------------------------
+The first and second views are highly consistent:
+
+- inefficientSort() differs by 0.44 percentage points.
+- vector::operator[]() differs by 0.47 percentage points.
+- vector::size() differs by 0.39 percentage points.
+- std::move() differs by 0.25 percentage points.
+- std::swap() differs by 0.26 percentage points.
+- The combined top-five percentage differs by only 0.09 points.
+
+This consistency makes the main conclusion robust: bubble sort and the
+operations it triggers account for almost all CPU time. Small entries near
+0.01 to 0.10 percent remain too close to the sampling granularity for precise
+ranking.
+
+12. Comparison with gprof and Callgrind
+--------------------------------------
+All three profiling tools identify the same root bottleneck:
+
+- perf places approximately 92.6 percent of CPU samples in inefficientSort()
+  and its main vector, move, and swap operations.
+- gprof attributes approximately 93.6 percent of sampled time to the complete
+  sorting test.
+- Callgrind attributes approximately 96.88 percent of executed instructions to
+  the sorting test and 96.44 percent to inefficientSort().
+
+The percentages differ because the tools measure different things. perf and
+gprof sample native execution, while Callgrind counts instructions and memory
+events on a simulated execution environment. The agreement across methods
+provides strong evidence that the quadratic sorting algorithm is the true
+performance bottleneck.
+
+perf adds native system-wide context that the other reports do not show as
+clearly, including time in libc, libstdc++, and kernel code. Callgrind provides
+more detailed cache-event counts, while gprof provides a traditional function
+call graph for instrumented code.
+
+13. Main Conclusions
+--------------------
+
+- The two perf views each contain approximately 10,000 task-clock samples and
+  report zero lost samples.
+- inefficientSort() is the largest exclusive hotspot at 41.10 to 41.54 percent.
+- The bubble-sort body and its vector access, size, move, and swap operations
+  account for approximately 92.6 percent of sampled CPU time.
+- The dominant issue is bubble sort's O(n^2) complexity, not an isolated defect
+  in std::vector or std::swap.
+- std::sort internal operations consume only small individual percentages.
+- Cache-friendly and cache-unfriendly traversal differ by only 0.01 percentage
+  points in this report, which is insufficient for a reliable conclusion.
+- Search and statistics tests are too short relative to sorting for meaningful
+  comparison in the combined profile.
+- I/O CPU cost is distributed across application, standard-library, libc, and
+  kernel symbols; task-clock does not fully measure blocked I/O time.
+- The perf result independently confirms the bottleneck found by gprof and
+  Callgrind.
+
+14. Limitations
+---------------
+This is a sampled task-clock profile, so percentages are estimates. Results can
+change with CPU scheduling, frequency scaling, system load, random input, and
+the number of collected samples.
+
+Additional limitations include:
+
+- The report combines several unrelated benchmarks in one execution.
+- Bubble sort dominates and hides shorter operations.
+- The displayed report does not provide complete inclusive call stacks.
+- No hardware counters for cycles, instructions, branches, or cache misses are
+  included in this task-clock view.
+- Small differences near one sample are not statistically meaningful.
+- Unknown kernel addresses reduce visibility into some system activity.
+- File-system caching and blocked I/O are not quantified by CPU percentages.
+- An unoptimized or minimally optimized build can expose library functions that
+  would normally be inlined in a release build.
+
+15. Recommendations
+-------------------
+Replace bubble sort with std::sort for non-trivial data sets. This is the
+highest-impact optimization and addresses the source of approximately 92.6
+percent of the sampled CPU time.
+
+For clearer future profiles:
+
+- Run sorting, searching, statistics, cache, and I/O in separate program modes.
+- Record call stacks with perf record --call-graph to obtain inclusive paths.
+- Use perf stat to collect cycles, instructions, IPC, branches, branch misses,
+  cache references, and cache misses.
+- Increase the sample count or repetitions for short operations.
+- Use a fixed random seed to improve reproducibility between runs.
+- Compare optimized release builds with instrumentation/debug builds.
+- Measure file I/O with std::chrono::steady_clock in addition to CPU sampling.
+- Use perf diff when comparing before-and-after optimization recordings.
