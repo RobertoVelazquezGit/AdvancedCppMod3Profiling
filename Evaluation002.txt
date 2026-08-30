@@ -1,0 +1,60 @@
+Question 1
+Which technique helps reduce dynamic memory allocation overhead by pre-allocating memory blocks for future use? 
+Pragma directives
+Cache optimization
+Memory pool allocation #
+Big O notation
+
+What is the time complexity of a binary search algorithm on a sorted dataset? 
+O(1)
+O(n^2)
+O(log n) #
+O(n)
+
+What is the primary advantage of using RAII (Resource Acquisition Is Initialization) in C++? 
+It requires manual resource cleanup
+It only works with memory resources
+It eliminates the need for destructors in classes
+It automatically manages resource allocation and deallocation based on object lifetime #
+
+Which compiler optimization level provides maximum optimization prioritizing execution speed?
+-O2
+-O3 #
+-O0
+-O1
+
+What is the main benefit of using move semantics in C++? 
+It only works with primitive data types
+It eliminates the need for destructors
+It automatically creates backup copies of all data
+It transfers resource ownership without copying data, enhancing performance #
+
+What is the primary purpose of profiling tools in C++ development? 
+To enhance code readability and formatting
+To automatically optimize code for better performance
+To detect security vulnerabilities in code
+To identify performance bottlenecks and guide targeted optimizations #
+
+Which data layout technique helps minimize cache misses and improve memory access performance? 
+Scattered memory allocation patterns
+Dynamic memory allocation for all data structures
+Random data distribution
+Cache-friendly data layout with contiguous memory allocation #
+
+What is the key advantage of using lambda expressions in modern C++?
+They provide a concise way to define inline function behavior, enhancing code readability #
+They eliminate the need for all function declarations
+They automatically improve execution speed of all code
+They automatically manage memory allocation
+
+When should profiling be integrated into the development process? 
+Only during the final testing phase
+Only when performance problems are already apparent
+Only during debugging sessions for functional errors
+As a routine part of development to guide continuous optimization decisions #
+
+What should be prioritized when interpreting profiling data for optimization? 
+Focusing on functions or processes with high resource consumption #
+Optimizing functions with the smallest performance footprint first
+Refactoring the entire codebase regardless of profiling insights
+Ensuring perfect code style adherence above performance concerns
