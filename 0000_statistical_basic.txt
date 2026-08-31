@@ -1,0 +1,480 @@
+BASIC STATISTICAL CONCEPTS FOR PERFORMANCE BENCHMARKING
+
+This summary uses 10 execution-time measurements, expressed in
+milliseconds.
+
+Samples: 9, 10, 11, 10, 10, 9, 11, 10, 9, 11 ms
+
+N = 10 samples
+
+1.  MEAN
+
+The mean is the average execution time obtained from all measurements.
+
+Mean = sum of samples / number of samples
+
+In this example:
+
+Sum = 9 + 10 + 11 + 10 + 10 + 9 + 11 + 10 + 9 + 11 = 100 ms
+
+Mean = 100 / 10 = 10 ms
+
+Interpretation: Our initial estimate of the average execution time is 10
+ms.
+
+In C++:
+
+double mean = sum / measurements.size();
+
+2.  DEVIATION FROM THE MEAN
+
+To study how much the measurements vary, we calculate the difference
+between each sample and the mean.
+
+Sample Deviation from 10 ms 9 ms -1 ms 10 ms 0 ms 11 ms +1 ms 10 ms 0 ms
+10 ms 0 ms 9 ms -1 ms 11 ms +1 ms 10 ms 0 ms 9 ms -1 ms 11 ms +1 ms
+
+If we simply added these deviations, positive and negative values would
+cancel each other out.
+
+For this reason, the deviations are squared when calculating variance.
+
+3.  VARIANCE
+
+Variance measures how dispersed the samples are around the mean by using
+squared deviations.
+
+For each sample:
+
+(sample - mean)^2
+
+In this example:
+
+Sample Deviation Squared deviation 9 -1 1 10 0 0 11 +1 1 10 0 0 10 0 0 9
+-1 1 11 +1 1 10 0 0 9 -1 1 11 +1 1
+
+Sum of squared deviations = 6
+
+Using the formula used in our benchmark:
+
+Variance = 6 / 10 = 0.6 ms^2
+
+Interpretation: The larger the variance, the more dispersed the
+execution-time measurements are.
+
+IMPORTANT: Variance is expressed in squared units. If execution time is
+measured in milliseconds, variance is expressed in ms^2.
+
+In C++:
+
+double variance = 0.0;
+
+for (double measurement : measurements) { variance += (measurement -
+mean) * (measurement - mean); }
+
+variance /= measurements.size();
+
+4.  STANDARD DEVIATION
+
+The standard deviation is the square root of the variance.
+
+Standard Deviation = sqrt(Variance)
+
+In this example:
+
+sqrt(0.6) ≈ 0.775 ms
+
+Interpretation: The execution times have a typical dispersion of
+approximately 0.775 ms around the 10 ms mean.
+
+An important advantage over variance is that standard deviation is
+expressed in the original measurement units: milliseconds.
+
+Approximately:
+
+                 mean
+                   |
+                   v
+
+———|———|———|——— 9.225 10 10.775 <———> ±0.775 ms
+
+If the measurements approximately follow a normal distribution, about
+68% of the observations are expected to fall within one standard
+deviation of the mean:
+
+mean ± standard deviation
+
+The 68% rule depends on the normal-distribution assumption and is not
+guaranteed for every dataset.
+
+5.  VARIANCE VS. STANDARD DEVIATION
+
+Variance: - Measures dispersion. - Uses squared deviations. - In this
+example: 0.6 ms^2.
+
+Standard deviation: - Is the square root of variance. - Also measures
+dispersion. - Uses the same units as the original measurements. - In
+this example: approximately 0.775 ms.
+
+Standard deviation is therefore usually easier to interpret when
+analyzing benchmark results.
+
+6.  STANDARD ERROR (SE)
+
+Standard deviation describes how much the INDIVIDUAL measurements vary.
+
+The Standard Error describes the uncertainty or expected variability of
+the calculated MEAN as an estimate of the true average execution time.
+
+SE = Standard Deviation / sqrt(N)
+
+In this example:
+
+SE = 0.775 / sqrt(10) SE ≈ 0.245 ms
+
+Therefore:
+
+Mean = 10 ms StdDev ≈ 0.775 ms SE ≈ 0.245 ms
+
+Interpretation:
+
+Standard Deviation: How much do individual execution-time measurements
+vary?
+
+Standard Error: How precisely have we estimated the average execution
+time?
+
+Because:
+
+SE = StdDev / sqrt(N)
+
+increasing the number of measurements generally decreases the Standard
+Error.
+
+Conceptually:
+
+N = 10 -> relatively larger SE N = 100 -> smaller SE N = 1000 -> even
+smaller SE
+
+This is one reason why a reliable benchmark should execute the operation
+multiple times instead of relying on a single measurement.
+
+7.  95% CONFIDENCE INTERVAL
+
+In our code, we use an approximation based on the normal distribution:
+
+Margin of Error = 1.96 * SE
+
+The value 1.96 is the critical value corresponding to approximately the
+central 95% of a normal distribution.
+
+For our example:
+
+SE ≈ 0.245 ms
+
+Margin ≈ 1.96 * 0.245 Margin ≈ 0.480 ms
+
+Therefore:
+
+95% CI ≈ Mean ± Margin
+
+95% CI ≈ 10 ± 0.480 ms
+
+Result:
+
+[9.520 ms, 10.480 ms]
+
+Practical interpretation: The confidence interval expresses the
+uncertainty associated with our estimate of the mean execution time.
+
+It does NOT mean that “95% of individual executions will take between
+9.520 and 10.480 ms.”
+
+The confidence interval concerns the estimated MEAN, not the
+distribution of individual measurements.
+
+In C++:
+
+double standardError = stddev / sqrt(measurements.size()); double margin
+= 1.96 * standardError;
+
+cout << “95% CI: [” << mean - margin << ”, ” << mean + margin << ”] ms”;
+
+8.  WHAT DOES 1.96 MEAN?
+
+For a normal distribution:
+
+approximately 68% -> mean ± 1 standard deviation approximately 95% ->
+mean ± 1.96 standard deviations approximately 99.7% -> mean ± 3 standard
+deviations
+
+For the confidence interval of the mean, we apply 1.96 to the Standard
+Error:
+
+mean ± 1.96 * SE
+
+NOTE: With only 10 samples and a standard deviation estimated from those
+same samples, a more rigorous statistical analysis would normally use
+Student’s t-distribution rather than 1.96.
+
+Our benchmark uses 1.96 as a simple approximation for understanding the
+concept.
+
+9.  MINIMUM AND MAXIMUM
+
+Minimum is the smallest measured execution time.
+
+Maximum is the largest measured execution time.
+
+In this example:
+
+Min = 9 ms Max = 11 ms
+
+They provide a quick view of the extremes, but they do not describe how
+all measurements are distributed.
+
+10. SUMMARY OF THE EXAMPLE
+
+Samples: 9, 10, 11, 10, 10, 9, 11, 10, 9, 11 ms
+
+Approximate results:
+
+N = 10 Mean = 10.000 ms Min = 9.000 ms Max = 11.000 ms Variance = 0.600
+ms^2 Standard Deviation = 0.775 ms Standard Error = 0.245 ms 95% CI =
+[9.520, 10.480] ms
+
+11. KEY IDEA FOR PROFILING AND BENCHMARKING
+
+A useful way to remember these concepts is:
+
+MEASUREMENTS | +–> Mean | What is the average execution time? | +–>
+Variance / Standard Deviation | How much do individual executions vary?
+| +–> Standard Error | How precisely have we estimated the mean? | +–>
+95% Confidence Interval What interval represents the uncertainty of that
+mean?
+
+Performance decisions should not be based on a single execution.
+
+For example:
+
+Version A: 10.0 ms Version B: 9.8 ms
+
+A difference of 0.2 ms may not represent a real performance improvement
+if the measurements have significant variability.
+
+Repeated measurements, standard deviation, Standard Error, and
+confidence intervals help distinguish a consistent performance
+improvement from normal measurement noise.
+
+
+/********************************************************************/
+
+## NORMAL (GAUSSIAN) DISTRIBUTION
+
+A normal distribution, also called a Gaussian distribution, is a probability distribution with a symmetric bell-shaped curve.
+
+It is centered around the mean.
+
+Conceptually:
+
+```text
+                         Mean
+                          |
+                          v
+                       .-----.
+                    .-'       '-.
+                  .'             '.
+                .'                 '.
+--------------|--------|--------|--------|--------------
+            μ-1σ       μ       μ+1σ
+
+              <---- about 68% ---->
+```
+
+Where:
+
+* `μ` (mu) represents the mean.
+* `σ` (sigma) represents the standard deviation.
+
+The standard deviation determines how spread out the distribution is.
+
+For a normal distribution, there is an important rule called the **68–95–99.7 rule**:
+
+```text
+Mean ± 1σ  -> approximately 68.27%
+Mean ± 2σ  -> approximately 95.45%
+Mean ± 3σ  -> approximately 99.73%
+```
+
+More precisely:
+
+```text
+                         Mean
+                           |
+                           v
+              .-------------------------.
+           .-'                           '-.
+        .-'                                 '-.
+------|---------|---------|---------|---------|---------|------
+     -3σ       -2σ       -1σ        μ        +1σ      +2σ    +3σ
+
+      |<---------------- 68.27% ---------------->|
+             approximately μ ± 1σ
+
+      |<-------------------- 95.45% -------------------->|
+             approximately μ ± 2σ
+
+      |<------------------------- 99.73% ------------------------->|
+             approximately μ ± 3σ
+```
+
+Some important critical values are:
+
+| Distance from mean | Percentage inside interval |
+| ------------------ | -------------------------: |
+| ±1σ                |                     68.27% |
+| ±1.645σ            |                        90% |
+| ±1.96σ             |                        95% |
+| ±2σ                |                     95.45% |
+| ±2.576σ            |                        99% |
+| ±3σ                |                     99.73% |
+
+Notice that **1.96σ and 2σ are not exactly the same**:
+
+```text
+±1.96σ -> 95.00%
+±2.00σ -> 95.45%
+```
+
+This explains why the value **1.96** appears when calculating a 95% confidence interval using the normal-distribution approximation.
+
+For example, if execution times approximately follow a normal distribution with:
+
+```text
+Mean = 10 ms
+Standard deviation = 0.775 ms
+```
+
+then approximately 68% of individual measurements would be expected within:
+
+```text
+Mean ± 1σ
+
+10 ± 0.775 ms
+
+[9.225 ms, 10.775 ms]
+```
+
+Approximately 95.45% would be expected within:
+
+```text
+Mean ± 2σ
+
+10 ± 1.550 ms
+
+[8.450 ms, 11.550 ms]
+```
+
+IMPORTANT:
+
+These percentages describe the distribution of **individual observations** when the data follow a normal distribution.
+
+This is different from a **confidence interval for the mean**, where the critical value (for example, 1.96)
+ is multiplied by the **Standard Error (SE)** rather than by the Standard Deviation:
+
+```text
+Individual measurements:
+
+    Mean ± 1.96 * Standard Deviation
+                |
+                +--> approximately 95% of observations
+
+
+95% confidence interval for the mean:
+
+    Mean ± 1.96 * Standard Error
+                |
+                +--> uncertainty in our estimate of the mean
+```
+
+Therefore:
+
+**Standard Deviation describes the spread of individual measurements.**
+
+**Standard Error and confidence intervals describe the uncertainty of the estimated mean.**
+
+Exactamente, y aquí está la distinción fundamental: 1.96 * SE no se utiliza para contener el 95% de las muestras. Se utiliza para construir aproximadamente un intervalo de confianza del 95% para la media.
+
+En una distribución normal hay dos cálculos parecidos, pero responden a preguntas distintas:
+
+Cálculo	Qué representa
+mean ± 1.96 * StdDev	Aproximadamente el 95% de las muestras individuales
+mean ± 1.96 * SE	Aproximadamente un 95% confidence interval de la media
+
+Con tu ejemplo:
+
+Mean   = 10 ms
+StdDev = 0.775 ms
+N      = 10
+
+SE = StdDev / sqrt(N)
+   = 0.775 / sqrt(10)
+   ≈ 0.245 ms
+1. Si quieres hablar del 95% de las ejecuciones
+
+Usas la desviación estándar:
+
+Mean ± 1.96 * StdDev
+
+10 ± 1.96 * 0.775
+10 ± 1.519
+
+≈ [8.481, 11.519] ms
+
+Si la población de tiempos es aproximadamente normal, alrededor del 95% de las ejecuciones individuales estarían dentro de ese rango.
+
+2. Si quieres hablar de la precisión de la media calculada
+
+Usas el Standard Error:
+
+Mean ± 1.96 * SE
+
+10 ± 1.96 * 0.245
+10 ± 0.480
+
+≈ [9.520, 10.480] ms
+
+Este intervalo es mucho más estrecho porque no intenta contener las ejecuciones.
+
+Está diciendo algo diferente: qué incertidumbre tenemos al usar nuestros 10 ms como estimación de la verdadera media de la población.
+
+La idea visual sería:
+
+Individual executions
+        <---------------------------->
+        mean ± 1.96 * StdDev
+        ≈ [8.48, 11.52]
+                 |
+                 |  Mean
+                 v
+--------|--------|--------|--------|--------
+                10 ms
+              <------->
+          mean ± 1.96 * SE
+          [9.52, 10.48]
+
+          uncertainty of
+          estimated mean
+
+Y hay una forma muy buena de recordarlo:
+
+StdDev → variabilidad de las ejecuciones.
+
+SE → variabilidad/incertidumbre de la media estimada.
+
+Por eso:
+
+95% of individual values       → mean ± 1.96 * StdDev
+95% confidence interval (mean) → mean ± 1.96 * SE
+
+Eso sí: con solo N=10 y StdDev estimada de la muestra, para el intervalo de confianza de la media es más riguroso usar la t de Student en vez de 1.96.
